@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Verificando disponibilidad - Google Play</title>
+  <style>
+    :root{
+      --green:#01875f;
+      --green-soft:#e6f4ea;
+      --text:#202124;
+      --muted:#5f6368;
+      --line:#e8eaed;
+      --bg:#fff;
+      --soft:#f8fafd;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:#fff;color:var(--text);font-family:Roboto,Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
+    body{min-height:100svh;display:flex;justify-content:center;overflow-x:hidden}
+    .page{width:min(430px,100vw);min-height:100svh;background:#fff;position:relative;padding-bottom:76px}
+
+    .gp-header{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 17px;border-bottom:1px solid #eee;background:#fff}
+    .gp-brand{display:flex;align-items:center;gap:9px;color:#5f6368;font-size:20px;font-weight:500;letter-spacing:.1px}
+    .gp-brand svg{width:27px;height:27px;display:block}
+    .gp-icons{display:flex;align-items:center;gap:20px;color:#5f6368}
+    .gp-icons svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .avatar{width:26px;height:26px;border-radius:50%;background:#e9eaee;display:block}
+
+    .content{padding:28px 18px 0}
+    .app-row{display:grid;grid-template-columns:74px 1fr;gap:15px;align-items:center;margin-bottom:24px}
+    .app-icon{width:74px;height:74px;border-radius:16px;background:#102035;display:grid;place-items:center;box-shadow:0 1px 2px rgba(60,64,67,.22);overflow:hidden}
+    .wordmark{font-weight:900;font-size:16px;letter-spacing:-.8px;color:#fff}.wordmark span:nth-child(1){color:#21b573}.wordmark span:nth-child(2){color:#2bb8ff}.wordmark span:nth-child(3){color:#ffad32}.wordmark span:nth-child(4){color:#ff4949}
+    h1{font-size:24px;line-height:1.18;margin:0 0 7px;font-weight:500;letter-spacing:-.25px;color:#202124}
+    .developer{font-size:14px;color:var(--green);font-weight:500;margin-bottom:4px}.ads{font-size:13px;color:var(--muted)}
+
+    .availability-card{border:1px solid var(--line);border-radius:20px;background:#fff;box-shadow:0 1px 2px rgba(60,64,67,.08);overflow:hidden}
+    .status-head{padding:20px 18px 16px;border-bottom:1px solid var(--line);display:flex;gap:14px;align-items:flex-start}
+    .play-check{width:44px;height:44px;border-radius:50%;background:var(--green-soft);display:grid;place-items:center;flex:0 0 auto;color:var(--green)}
+    .play-check svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+    .status-head h2{font-size:21px;line-height:1.22;margin:0 0 6px;font-weight:500;letter-spacing:-.2px}.status-head p{font-size:14px;line-height:1.35;margin:0;color:var(--muted)}
+
+    .progress-wrap{height:4px;background:#edf0f2;overflow:hidden}.progress{height:100%;width:0;background:var(--green);animation:fill 5s linear forwards}@keyframes fill{to{width:100%}}
+    .checks{padding:8px 0}.check{display:flex;align-items:center;gap:14px;padding:14px 18px;opacity:0;transform:translateY(5px);animation:show .28s ease forwards}.check:nth-child(1){animation-delay:.45s}.check:nth-child(2){animation-delay:1.65s}.check:nth-child(3){animation-delay:2.85s}@keyframes show{to{opacity:1;transform:translateY(0)}}
+    .tick{width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:15px;font-weight:800;flex:0 0 auto}.check-text{font-size:16px;color:#202124;font-weight:500}.check-sub{font-size:12px;color:var(--muted);margin-top:2px}
+    .redirect-box{margin:18px;border-radius:16px;background:#f7fdf9;border:1px solid #d8eee1;padding:15px 14px;display:flex;align-items:center;justify-content:space-between;gap:14px}.redirect-box strong{font-size:16px;font-weight:500}.redirect-box span{display:block;color:var(--muted);font-size:12px;margin-top:4px}.spinner{width:28px;height:28px;border-radius:50%;border:3px solid #d8eee1;border-top-color:var(--green);animation:spin .8s linear infinite;flex:0 0 auto}@keyframes spin{to{transform:rotate(360deg)}}
+
+    .download-btn{display:block;width:100%;height:48px;line-height:48px;border-radius:999px;background:var(--green);color:#fff;text-align:center;text-decoration:none;font-size:15px;font-weight:600;margin:22px 0 18px}
+    .safe-note{display:flex;gap:10px;align-items:flex-start;color:var(--muted);font-size:13px;line-height:1.4;background:#f8fafd;border-radius:16px;padding:14px;margin-top:18px}.safe-note svg{width:20px;height:20px;stroke:var(--green);fill:none;stroke-width:2;flex:0 0 auto}
+
+    .bottom-tabs{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(430px,100vw);height:64px;background:#fff;border-top:1px solid #e5e5e5;display:flex;z-index:4;padding-bottom:env(safe-area-inset-bottom)}
+    .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:#5f6368;font-weight:500}.tab svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.tab.active{color:var(--green)}
+    @media (min-width:431px){body{background:#f5f5f5}.page{box-shadow:0 0 0 1px #eee}}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="gp-header">
+      <div class="gp-brand">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="a" x1="5" y1="3" x2="25" y2="22"><stop stop-color="#00A0FF"/><stop offset="1" stop-color="#00E0A0"/></linearGradient><linearGradient id="b" x1="20" y1="14" x2="34" y2="20"><stop stop-color="#FFE000"/><stop offset="1" stop-color="#FF9D00"/></linearGradient><linearGradient id="c" x1="7" y1="36" x2="26" y2="18"><stop stop-color="#FF3A44"/><stop offset="1" stop-color="#C31162"/></linearGradient></defs><path d="M7 5.2v29.6c0 1.4 1.5 2.3 2.8 1.6L26 20 9.8 3.6C8.5 2.9 7 3.8 7 5.2z" fill="url(#a)"/><path d="M26 20l6.4-6.3c1.1-1.1.7-3-.8-3.6L9.8 3.6 26 20z" fill="url(#b)"/><path d="M9.8 36.4l21.8-6.5c1.5-.6 1.9-2.5.8-3.6L26 20 9.8 36.4z" fill="url(#c)"/></svg>
+        <span>Google Play</span>
+      </div>
+      <div class="gp-icons" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.4 2.4 0 0 1 4.6 1c0 2-2.4 2.1-2.4 4"/><path d="M12 17.5h.01"/></svg>
+        <span class="avatar"></span>
+      </div>
+    </header>
+
+    <main class="content">
+      <section class="app-row">
+        <div class="app-icon" aria-hidden="true"><div class="wordmark"><span>C</span><span>O</span><span>O</span><span>L</span>BIT</div></div>
+        <div>
+          <h1>Coolbet - Chile de Fútbol</h1>
+          <div class="developer">Coolbet Game Productions</div>
+          <div class="ads">Contiene anuncios</div>
+        </div>
+      </section>
+
+      <section class="availability-card" aria-live="polite">
+        <div class="status-head">
+          <div class="play-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <div>
+            <h2>Verificando disponibilidad en tu región...</h2>
+            <p>Google Play está verificando la compatibilidad y el acceso regional.</p>
+          </div>
+        </div>
+        <div class="progress-wrap" aria-hidden="true"><div class="progress"></div></div>
+        <div class="checks">
+          <div class="check"><div class="tick">✓</div><div><div class="check-text">Android detectado</div><div class="check-sub">Entorno de dispositivo compatible</div></div></div>
+          <div class="check"><div class="tick">✓</div><div><div class="check-text">Región compatible</div><div class="check-sub">Acceso disponible para tu ubicación</div></div></div>
+          <div class="check"><div class="tick">✓</div><div><div class="check-text">Última versión disponible</div><div class="check-sub">Lista en Google Play</div></div></div>
+        </div>
+        <div class="redirect-box">
+          <div><strong>Redirigiendo...</strong><span>Abriendo Google Play automáticamente.</span></div>
+          <div class="spinner" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <a class="download-btn" href="https://play.google.com/store/apps/details?id=com.carlinky.dailybonus&amp;gl=cl&amp;hl=es" rel="nofollow noopener">Continuar a Google Play</a>
+      <div class="safe-note"><svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.6 2.9 8.8 7 10 4.1-1.2 7-5.4 7-10V6l-7-3z"/><path d="m9 12 2 2 4-4"/></svg><span>Esta verificación de disponibilidad ayuda a abrir el listado correcto de Google Play para tu región.</span></div>
+    </main>
+
+    <nav class="bottom-tabs" aria-label="Google Play tabs">
+      <div class="tab"><svg viewBox="0 0 24 24"><path d="M7 15h10l2 4a2 2 0 0 0 2-2l-1.2-7.5A4 4 0 0 0 15.9 6H8.1a4 4 0 0 0-3.9 3.5L3 17a2 2 0 0 0 2 2l2-4z"/><path d="M8 11h4M10 9v4M16 10h.01M18 13h.01"/></svg><span>Juegos</span></div>
+      <div class="tab active"><svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg><span>Aplicaciones</span></div>
+      <div class="tab"><svg viewBox="0 0 24 24"><path d="M6 4h12v16H6z"/><path d="M9 8h6M9 12h6"/></svg><span>Libros</span></div>
+      <div class="tab"><svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2 7.5 14 3 9.6l6.2-.9L12 3z"/></svg><span>Niños</span></div>
+    </nav>
+  </div>
+
+  <script>
+    const APP_URL = "https://play.google.com/store/apps/details?id=com.carlinky.dailybonus&gl=cl&hl=es";
+    const REDIRECT_DELAY_MS = 5000;
+    window.setTimeout(() => window.location.assign(APP_URL), REDIRECT_DELAY_MS);
+  </script>
+</body>
+</html>
