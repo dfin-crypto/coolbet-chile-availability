@@ -1,0 +1,1 @@
+# coolbet-chile-availability
